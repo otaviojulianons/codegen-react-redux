@@ -1,0 +1,25 @@
+
+import { ActionsTypes } from './types';
+import { {{#operations}}
+{{#operation}}
+  {{nickname}}Service{{#hasMore}},{{/hasMore}}
+{{/operation}}{{/operations}}} from '../../../core/service/{{baseName}}Service';
+{{#operations}}
+{{#operation}}
+
+const {{nickname}} = ({{#allParams}}{{baseName}}{{#hasMore}},{{/hasMore}}{{/allParams}}) => ({
+  types: ActionsTypes.{{#methodname}}{{operationId}}@{{path}}@{{baseName}}@{{httpMethod}}{{/methodname}}ActionsTypes,
+  callService: () => {{nickname}}Service({{#allParams}}{{baseName}}{{#hasMore}},{{/hasMore}}{{/allParams}}),
+  payload: { {{#allParams}}{{baseName}}{{#hasMore}},{{/hasMore}}{{/allParams}} }
+});
+
+{{/operation}}
+{{/operations}}
+
+export {
+  {{#operations}}
+  {{#operation}}
+  {{nickname}}{{#hasMore}},{{/hasMore}}
+  {{/operation}}
+  {{/operations}}
+};

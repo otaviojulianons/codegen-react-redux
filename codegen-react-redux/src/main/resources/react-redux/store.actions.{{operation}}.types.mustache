@@ -1,0 +1,29 @@
+{{#operations}}
+{{#operation}}
+const {{#snakecase}}{{>methodFormat}}{{/snakecase}}_REQUEST = '{{#snakecase}}{{>methodFormat}}{{/snakecase}}_REQUEST';
+const {{#snakecase}}{{>methodFormat}}{{/snakecase}}_RESPONSE = '{{#snakecase}}{{>methodFormat}}{{/snakecase}}_RESPONSE';
+const {{#snakecase}}{{>methodFormat}}{{/snakecase}}_FAILURE = '{{#snakecase}}{{>methodFormat}}{{/snakecase}}_FAILURE';
+
+{{/operation}}
+{{/operations}}
+{{#operations}}
+{{#operation}}
+const {{>methodFormat}}ActionsTypes = [
+  {{#snakecase}}{{>methodFormat}}{{/snakecase}}_REQUEST,
+  {{#snakecase}}{{>methodFormat}}{{/snakecase}}_RESPONSE,
+  {{#snakecase}}{{>methodFormat}}{{/snakecase}}_FAILURE,
+];
+
+{{/operation}}
+{{/operations}}
+
+export const ActionsTypes =  {
+  {{#operations}}
+  {{#operation}}
+  {{#snakecase}}{{>methodFormat}}{{/snakecase}}_REQUEST,
+  {{#snakecase}}{{>methodFormat}}{{/snakecase}}_RESPONSE,
+  {{#snakecase}}{{>methodFormat}}{{/snakecase}}_FAILURE,
+  {{>methodFormat}}ActionsTypes{{#hasMore}},{{/hasMore}}
+  {{/operation}}
+  {{/operations}}
+};

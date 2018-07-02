@@ -1,0 +1,65 @@
+
+import { ActionsTypes } from '../../actions/{{baseName}}/types';
+
+const initialState = { 
+{{#operations}}{{#operation}}{{#httpMethod}}{{#isGet}}{{#returnType}}{{#isRetornoApiObj}}{{#isRetornoApiArray}}
+    isFetching{{#titlecase}}{{>methodFormat}}{{/titlecase}}: false,{{#isSubTypeArrayModel}}     
+    lista{{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}}: [],{{/isSubTypeArrayModel}}{{/isRetornoApiArray}}{{^isRetornoApiArray}} 
+    isFetching{{#titlecase}}{{>methodFormat}}{{/titlecase}}: false,{{#isSubTypeModel}}  
+    {{#camelcase}}{{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}}{{/camelcase}}: null,{{/isSubTypeModel}}{{/isRetornoApiArray}}{{/isRetornoApiObj}}{{/returnType}}{{/isGet}}{{^isGet}}
+    isExecuting{{#titlecase}}{{>methodFormat}}{{/titlecase}}: false,{{/isGet}}{{/httpMethod}}{{/operation}}{{/operations}}
+};
+
+const {{#titlecase}}{{baseName}}{{/titlecase}}Reducer = (state = initialState, action) => {
+  switch (action.type) {
+{{#operations}}{{#operation}}{{#httpMethod}}{{#isGet}}{{#returnType}}{{#isRetornoApiObj}}
+    case ActionsTypes.{{#snakecase}}{{>methodFormat}}{{/snakecase}}_REQUEST:
+      return {
+        ...state,
+        isFetching{{#titlecase}}{{>methodFormat}}{{/titlecase}}: true,
+      };
+
+    case ActionsTypes.{{#snakecase}}{{>methodFormat}}{{/snakecase}}_RESPONSE:
+      return {
+        ...state,
+{{#isSubTypeModel}}       
+        {{#camelcase}}{{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}}{{/camelcase}}: action.response,
+{{/isSubTypeModel}} 
+{{^isSubTypeModel}}   
+    {{#isSubTypeArrayModel}} 
+        lista{{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}}: action.response,    
+    {{/isSubTypeArrayModel}} 
+{{/isSubTypeModel}}    
+        isFetching{{#titlecase}}{{>methodFormat}}{{/titlecase}}: false,
+      };
+
+    case ActionsTypes.{{#snakecase}}{{>methodFormat}}{{/snakecase}}_FAILURE:
+      return {
+        ...state,
+        isFetching{{#titlecase}}{{>methodFormat}}{{/titlecase}}: false,
+      }; 
+{{/isRetornoApiObj}}{{/returnType}}{{/isGet}}{{^isGet}}
+    case ActionsTypes.{{#snakecase}}{{>methodFormat}}{{/snakecase}}_REQUEST:
+      return {
+        ...state,
+        isExecuting{{#titlecase}}{{>methodFormat}}{{/titlecase}}: true,
+      };
+
+    case ActionsTypes.{{#snakecase}}{{>methodFormat}}{{/snakecase}}_RESPONSE:
+      return {
+        ...state,
+        isExecuting{{#titlecase}}{{>methodFormat}}{{/titlecase}}: false,
+      };
+
+    case ActionsTypes.{{#snakecase}}{{>methodFormat}}{{/snakecase}}_FAILURE:
+      return {
+        ...state,
+        isExecuting{{#titlecase}}{{>methodFormat}}{{/titlecase}}: false,
+      }; 
+{{/isGet}}{{/httpMethod}}{{/operation}}{{/operations}}       
+    default:
+      return state;
+  }
+};
+
+export default {{#titlecase}}{{baseName}}{{/titlecase}}Reducer;

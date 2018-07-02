@@ -1,0 +1,68 @@
+import axios from 'axios';
+const API_URL = process.env.REACT_APP_{{#snakecase}}{{apiName}}{{/snakecase}}_URL;
+
+{{#operations}}
+{{#operation}}
+{{^hasFormParams}}
+const {{nickname}} = ({{#allParams}}{{baseName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) => {
+{{#httpMethod}}{{#isDelete}}
+  //####### DELETE #######
+  const options = { {{#hasBodyParam}}
+    data: {{#bodyParams}}{{baseName}}{{/bodyParams}} ,
+    headers:{ {{#headerParams}}
+      "{{baseName}}": {{baseName}},{{/headerParams}}
+      "Content-Type":"application/json"
+    }{{/hasBodyParam}} {{#hasQueryParams}}, { 
+    params: { {{#queryParams}}
+      {{baseName}}{{#hasMore}}, {{/hasMore}}{{/queryParams}}
+    }{{/hasQueryParams}}
+  };{{/isDelete}}{{/httpMethod}}{{#httpMethod}}{{#isGet}}
+  //####### GET #######
+  const options = { {{#hasBodyParam}}
+    data: {{#bodyParams}}{{baseName}}{{/bodyParams}} ,
+    headers:{ {{#headerParams}}
+      "{{baseName}}": {{baseName}},{{/headerParams}}
+      "Content-Type":"application/json"
+    }{{/hasBodyParam}}{{#hasQueryParams}}{{#hasBodyParam}},{{/hasBodyParam}}
+    params: { {{#queryParams}}
+      {{baseName}}{{#hasMore}}, {{/hasMore}}{{/queryParams}}
+    }{{/hasQueryParams}}
+  };{{/isGet}}{{/httpMethod}}{{#httpMethod}}{{#isPut}}
+  //####### PUT #######
+  const options = { {{#hasBodyParam}}
+    headers:{ {{#headerParams}}
+      "{{baseName}}": {{baseName}},{{/headerParams}}
+      "Content-Type":"application/json"
+    }{{/hasBodyParam}} {{#hasQueryParams}}, { 
+    params: { {{#queryParams}}
+      {{baseName}}{{#hasMore}}, {{/hasMore}}{{/queryParams}}
+    }{{/hasQueryParams}}
+  };{{/isPut}}{{/httpMethod}}{{#httpMethod}}{{#isPost}}
+  //####### POST #######
+  const options = { {{#hasBodyParam}}
+    headers:{ {{#headerParams}}
+      "{{baseName}}": {{baseName}},{{/headerParams}}
+      "Content-Type":"application/json"
+    }{{/hasBodyParam}}{{^hasBodyParam}}{{#hasHeaderParams}}
+    headers:{ {{#headerParams}}
+      "{{baseName}}": {{baseName}}{{#hasMore}}, {{/hasMore}}{{/headerParams}}
+    }{{/hasHeaderParams}}{{/hasBodyParam}}{{#hasQueryParams}}, { 
+    params: { {{#queryParams}}
+      {{baseName}}{{#hasMore}}, {{/hasMore}}{{/queryParams}}
+    }{{/hasQueryParams}}
+  };{{/isPost}}{{/httpMethod}}  
+  return axios.{{#lowercase}}{{httpMethod}}{{/lowercase}}(`${ API_URL }{{path}}`{{#pathParams}}.replace(["{","{{baseName}}","}"].join(),{{baseName}}){{/pathParams}}{{#bodyParams}}{{#httpMethod}}{{#isPost}},{ {{baseName}}: {{baseName}} }{{/isPost}}{{#isPut}},{ {{baseName}}: {{baseName}} }{{/isPut}}{{/httpMethod}}{{/bodyParams}},options);
+}
+
+{{/hasFormParams}}
+{{/operation}}
+{{/operations}}
+export {
+  {{#operations}}
+  {{#operation}}
+  {{^hasFormParams}}
+  {{nickname}}{{#hasMore}}, {{/hasMore}}
+  {{/hasFormParams}}
+  {{/operation}}
+  {{/operations}}
+};

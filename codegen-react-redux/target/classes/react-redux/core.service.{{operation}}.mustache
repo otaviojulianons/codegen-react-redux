@@ -1,0 +1,99 @@
+{{#distinctClear}}{{/distinctClear}}
+{{#operations}}
+{{#operation}}
+{{^hasFormParams}}
+    {{#returnType}}
+    {{#isRetornoApiObj}} 
+      {{#isRetornoApiArray}} 
+          {{#isSubTypeArrayModel}} 
+{{#distinct}}import {{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}} from './../model/{{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}}';{{/distinct}}
+          {{/isSubTypeArrayModel}}
+          {{^isSubTypeArrayModel}} 
+          {{/isSubTypeArrayModel}} 
+      {{/isRetornoApiArray}}
+      {{^isRetornoApiArray}} 
+          {{#isSubTypeModel}}
+{{#distinct}}import {{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}} from './../model/{{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}}';{{/distinct}}
+          {{/isSubTypeModel}}
+          {{^isSubTypeModel}} 
+          {{/isSubTypeModel}} 
+      {{/isRetornoApiArray}} 
+    {{/isRetornoApiObj}}
+    {{/returnType}}
+{{/hasFormParams}}
+{{/operation}}
+{{/operations}}
+import { 
+  {{#operations}}{{#operation}}{{^hasFormParams}}{{nickname}}{{#hasMore}},{{/hasMore}}
+  {{/hasFormParams}}{{/operation}}{{/operations}} 
+} from './../api/{{baseName}}';
+
+{{#operations}}
+{{#operation}}
+{{^hasFormParams}}
+const {{nickname}}Service = async ({{#allParams}}{{baseName}}{{#hasMore}},{{/hasMore}}{{/allParams}}) => {
+  try {
+{{#allParams}}
+{{#required}}
+    if ({{paramName}} === null || {{paramName}} === undefined) {
+        throw new Error('O parâmetro [{{paramName}}] é obrigatório.');
+    }
+{{/required}}
+{{/allParams}}
+    const response = await {{nickname}}({{#allParams}}{{baseName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+    {{#returnType}}
+    {{#isRetornoApiObj}} 
+      {{#isRetornoApiArray}} 
+          {{#isSubTypeArrayModel}} 
+    return response.data.retorno.map( item => new {{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}}(item)); //ARRAY MODEL
+          {{/isSubTypeArrayModel}}
+          {{^isSubTypeArrayModel}} 
+    return response.data.retorno; //ARRAY PRIMITIVE
+          {{/isSubTypeArrayModel}} 
+      {{/isRetornoApiArray}}
+      {{^isRetornoApiArray}} 
+          {{#isSubTypeModel}}
+    return new {{#subtype}}{{#subtype}}{{returnType}}{{/subtype}}{{/subtype}}(response.data.retorno); //MODEL
+          {{/isSubTypeModel}}
+          {{^isSubTypeModel}} 
+    return response.data.retorno; //PRIMITIVE
+          {{/isSubTypeModel}} 
+      {{/isRetornoApiArray}} 
+    {{/isRetornoApiObj}}
+    {{^isRetornoApiObj}}
+    return response.data;
+    {{/isRetornoApiObj}}
+    {{/returnType}}
+  } catch (error) {
+    throw error;
+  }
+};
+
+{{/hasFormParams}}
+{{/operation}}
+{{/operations}}
+
+//teste
+{{#operations}}
+function test(){
+{{#operation}}
+{{^hasFormParams}}
+  {{nickname}}Service({{#allParams}}{{#isBodyParam}} { corpo: "corpo" } {{/isBodyParam}}{{^isBodyParam}} "parametro" {{#hasMore}},{{/hasMore}}{{/isBodyParam}}{{/allParams}})
+    .then( response => console.log('{{nickname}}',response))
+    .catch( err => console.error('{{nickname}}',err));
+
+{{/hasFormParams}}
+{{/operation}}
+}
+{{/operations}}
+
+export {
+  {{#operations}}
+  {{#operation}}
+  {{^hasFormParams}}
+  {{nickname}}Service,
+  {{/hasFormParams}}
+  {{/operation}}
+  {{/operations}}
+  test
+};

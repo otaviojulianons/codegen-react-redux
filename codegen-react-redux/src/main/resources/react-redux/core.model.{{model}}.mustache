@@ -1,0 +1,28 @@
+//import { formatarData } from '../../../helpers/Formatters';
+{{#models}}
+{{#model}}
+
+class {{#classname}}{{#basetype}}{{classname}}{{/basetype}}{{/classname}}{
+  constructor({
+    {{#vars}}
+    {{name}}{{#hasMore}}, {{/hasMore}}
+    {{/vars}}
+  }) {
+    {{#vars}}
+    this.{{name}} = {{name}};
+    {{/vars}}
+  }
+
+  {{#vars}}
+  {{#isDateTime}}
+  //get {{name}}Formatada() {
+  //  return formatarData(this.{{name}});
+  //}
+
+  {{/isDateTime}}
+  {{/vars}}
+{{/model}}
+{{/models}}
+}
+export default {{#classname}}{{#basetype}}{{classname}}{{/basetype}}{{/classname}};
+
